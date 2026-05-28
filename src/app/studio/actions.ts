@@ -146,6 +146,7 @@ export async function saveProject(payload: {
   location?: string;
   scope?: string;
   year?: number | null;
+  videoUrl?: string | null;
   order?: number;
   published?: boolean;
   images: ProjectImageInput[];
@@ -159,6 +160,7 @@ export async function saveProject(payload: {
     location: payload.location?.trim() || null,
     scope: payload.scope?.trim() || null,
     year: payload.year ?? null,
+    videoUrl: payload.videoUrl ?? null,
     order: payload.order ?? 0,
     published: payload.published ?? true
   };

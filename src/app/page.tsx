@@ -3,7 +3,6 @@ import { getSiteContentMap, content } from '@/lib/utils';
 import type { HeroSlideT, StatT, ServiceT, ProjectT, ProjectImageT } from '@/lib/types';
 
 import Intro from '@/components/public/Intro';
-import Cursor from '@/components/public/Cursor';
 import ScrollEffects from '@/components/public/ScrollEffects';
 import Navbar from '@/components/public/Navbar';
 import Hero from '@/components/public/Hero';
@@ -38,7 +37,6 @@ export default async function HomePage() {
         brandName={content(c, 'intro_brand_name', 'Haus')}
         brandSub={content(c, 'intro_brand_sub', 'Design Studio')}
       />
-      <Cursor />
       <ScrollEffects />
 
       <div className="bg-fixed" aria-hidden="true">
@@ -88,6 +86,7 @@ export default async function HomePage() {
             type: p.type,
             location: p.location,
             scope: p.scope,
+            videoUrl: p.videoUrl,
             images: p.images.map((i: ProjectImageT) => ({ id: i.id, url: i.url, alt: i.alt, role: i.role }))
           }))}
           eyebrow={content(c, 'portfolio_eyebrow', 'Selected work')}

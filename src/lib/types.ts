@@ -52,6 +52,7 @@ export interface ProjectT {
   location: string | null;
   scope: string | null;
   year: number | null;
+  videoUrl?: string | null;
   order: number;
   published: boolean;
   images: ProjectImageT[];

@@ -25,6 +25,7 @@ export interface ProjectInput {
   year: number | null;
   order: number;
   published: boolean;
+  videoUrl: string | null;
   images: ImageItem[];
 }
 
@@ -38,6 +39,7 @@ const empty: ProjectInput = {
   year: null,
   order: 0,
   published: true,
+  videoUrl: null,
   images: []
 };
 
@@ -112,6 +114,7 @@ export default function ProjectEditor({ initial }: { initial?: ProjectInput }) {
         year: p.year,
         order: p.order,
         published: p.published,
+        videoUrl: p.videoUrl || null,
         images: reordered
       });
       setFlash({ ok: true, msg: 'Saved.' });
@@ -167,6 +170,17 @@ export default function ProjectEditor({ initial }: { initial?: ProjectInput }) {
             <label className="f-label">Scope</label>
             <input className="f-input" value={p.scope} onChange={(e) => set('scope', e.target.value)} placeholder="Full turnkey" />
           </div>
+        </div>
+
+        <div className="f-group">
+          <label className="f-label">Video tour URL <span style={{fontWeight:400,textTransform:'none',letterSpacing:0}}>(optional)</span></label>
+          <input
+            className="f-input"
+            value={p.videoUrl ?? ''}
+            onChange={(e) => set('videoUrl', e.target.value || null)}
+            placeholder="YouTube, Vimeo, or .mp4 URL"
+          />
+          <div className="f-hint">Paste a YouTube or Vimeo link to add a video tour. Shown inside the portfolio popup.</div>
         </div>
 
         <div className="f-group">
