@@ -28,6 +28,7 @@ export default async function EditProjectPage({
     location: project.location ?? '',
     scope: project.scope ?? '',
     year: project.year,
+    videoUrl: project.videoUrl ?? null,
     order: project.order,
     published: project.published,
     images: project.images.map((i: ProjectImageT) => ({
