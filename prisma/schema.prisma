@@ -1,0 +1,122 @@
+// Haus Design Studio — Prisma schema
+// All site content is editable via /studio. Public site reads from this DB.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Admin (single login record) ─────────────────────────────────
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ─── Portfolio Projects ──────────────────────────────────────────
+model Project {
+  id          String         @id @default(cuid())
+  title       String         // e.g. "The Warmth Within" (use <em>X</em> for italic accent)
+  category    String         // e.g. "Residential · Living Room"
+  description String         @db.Text
+  type        String?        // "Luxury Residential" / "Commercial / Educational"
+  location    String?        // "Hyderabad"
+  scope       String?        // "Full Interior Design"
+  year        Int?
+  order       Int            @default(0)
+  published   Boolean        @default(true)
+  images      ProjectImage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([order])
+}
+
+model ProjectImage {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url       String   // ImageKit URL (or /images/seed/... for seed data)
+  fileId    String?  // ImageKit fileId (for deletion). Null for seed images.
+  alt       String
+  role      String   @default("small") // "hero" | "small"
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
+
+// ─── Hero slider ────────────────────────────────────────────────
+model HeroSlide {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  fileId    String?
+  title     String   // "The Warmth Within"
+  subtitle  String?  // "01 / 03"
+  alt       String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// ─── Stats (Projects completed / Years / Sq ft) ─────────────────
+model Stat {
+  id        String   @id @default(cuid())
+  label     String   // "Projects completed"
+  value     Int      // 12
+  suffix    String   @default("+") // "+", "K+ sqft", etc.
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// ─── Services ───────────────────────────────────────────────────
+model Service {
+  id          String   @id @default(cuid())
+  name        String   // "Interior Design"
+  description String   @db.Text
+  number      String   @default("01") // "01", "02", ...
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+// ─── Site content (flexible key/value: about bio, designer photo, etc) ──
+// Single-row-per-key catch-all for editable strings, URLs, rich text.
+model SiteContent {
+  key       String   @id // e.g. "about_bio_p1", "designer_photo_url", "stats_tagline"
+  value     String   @db.Text
+  type      String   @default("text") // "text" | "richtext" | "url" | "image_url" | "image_fileid"
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Contact form inquiries ─────────────────────────────────────
+model Inquiry {
+  id           String   @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  projectType  String?
+  message      String?  @db.Text
+  read         Boolean  @default(false)
+  archived     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([read])
+}
